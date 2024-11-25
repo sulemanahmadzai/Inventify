@@ -18,12 +18,13 @@ const UserSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String, required: false },
     role: {
       type: String,
       enum: ["customer", "manager", "admin"],
-      default: "customer",
+      default: "admin",
     },
+
     personalDetails: PersonalDetailsSchema,
     paymentMethods: [PaymentMethodSchema],
     accountStatus: {
