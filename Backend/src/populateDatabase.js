@@ -173,12 +173,12 @@ const populateDatabase = async () => {
   try {
     await connectDB();
 
-    await insertUsers();
-    await insertCategories();
-    await insertProducts();
+    // await insertUsers();
+    // await insertCategories();
+    // await insertProducts();
     await insertOrders();
-    await insertInventory();
-    await insertKPIs();
+    // await insertInventory();
+    // await insertKPIs();
 
     console.log("Database populated successfully.");
     process.exit(0);

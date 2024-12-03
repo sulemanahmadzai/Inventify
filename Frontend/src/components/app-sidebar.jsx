@@ -1,18 +1,18 @@
 import * as React from "react";
 import {
-  BookOpen,
-  Bot,
-  Frame,
   LifeBuoy,
-  Map,
-  PieChart,
   Send,
-  Settings2,
-  SquareTerminal,
+  Package,
+  Users,
+  BarChart2,
+  FileText,
+  Globe,
+  PieChart,
+  Layers,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
+
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -31,93 +31,68 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
+  // src/config/navConfig.js
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: BarChart2,
+      items: [], // Overview with KPIs and Charts
+    },
+    {
+      title: "User Management",
+      url: "/user-management",
+      icon: Users,
+      items: [],
+    },
+    {
+      title: "Reports",
+      url: "/reports",
+      icon: FileText,
       items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
+        { title: "Sales Reports", url: "/reports/sales" },
+        { title: "Inventory Reports", url: "/reports/inventory" },
+        { title: "Download Reports", url: "/reports/downloads" },
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: "Performance & Insights",
+      url: "/performance-insights",
+      icon: Layers,
       items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
+        { title: "Performance Tracking", url: "/performance-tracking" },
+        { title: "Resource Insights", url: "/resource-insights" },
+        { title: "Revenue & Cost Insights", url: "/insights/revenue-cost" },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
+      title: "Analysis",
+      url: "/analysis",
+      icon: PieChart,
       items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+        { title: "Category Analysis", url: "/analysis/category" },
+        { title: "Product Performance", url: "/analysis/product" },
+        { title: "Trends", url: "/analysis/trends" },
       ],
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
+      title: "Inventory & Waste Management",
+      url: "/inventory-management",
+      icon: Package,
       items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+        { title: "Inventory Turnover", url: "/inventory/turnover" },
+        { title: "Waste Tracking", url: "/inventory/waste" },
+        { title: "Loss Tracking", url: "/inventory/loss" },
       ],
+    },
+    {
+      title: "Geographic Insights",
+      url: "/geo-sales",
+      icon: Globe,
+      items: [],
     },
   ],
+
   navSecondary: [
     {
       title: "Support",
@@ -128,23 +103,6 @@ const data = {
       title: "Feedback",
       url: "#",
       icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };
@@ -176,7 +134,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

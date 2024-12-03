@@ -196,3 +196,131 @@
     animation: bounce 2s infinite;
   }
 }
+
+:root {
+  --chart-available: 240 2% 26%;
+  --chart-low-stock: 240 1% 58%;
+
+  --chart-out-of-stock: 359 2% 90%;
+}
+
+/* Custom styles for enhanced UI */
+.page-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.card-gradient {
+  @apply bg-gradient-to-r from-background to-card dark:from-background dark:to-card;
+}
+
+.table-container {
+  @apply bg-card rounded-lg shadow-lg overflow-hidden;
+}
+
+.status-badge {
+  @apply px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.status-active {
+  @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300;
+}
+
+.status-deactivated {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300;
+}
+
+.status-deleted {
+  @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300;
+}
+
+.role-badge {
+  @apply px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.role-admin {
+  @apply bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300;
+}
+
+.role-manager {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300;
+}
+
+.role-supplier {
+  @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300;
+}
+
+.role-customer {
+  @apply bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300;
+}
+
+.form-container {
+  @apply max-w-4xl mx-auto bg-card rounded-xl shadow-lg overflow-hidden;
+}
+
+.form-header {
+  @apply bg-gradient-to-r from-background to-card border-b border-border p-6;
+}
+
+.form-content {
+  @apply p-6 space-y-6;
+}
+
+.input-group {
+  @apply space-y-2;
+}
+
+.detail-card {
+  @apply bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300;
+}
+
+.detail-header {
+  @apply bg-gradient-to-r from-background to-card p-6 border-b border-border;
+}
+
+.detail-content {
+  @apply p-6 space-y-4;
+}
+
+.detail-field {
+  @apply space-y-1;
+}
+
+.detail-label {
+  @apply text-sm font-medium text-muted-foreground;
+}
+
+.detail-value {
+  @apply text-lg font-medium text-foreground;
+}
+
+/* Input and form field styles */
+.form-input {
+  @apply bg-background focus:bg-background transition-colors;
+}
+
+/* Card styles */
+.card-footer {
+  @apply flex justify-between border-t border-border bg-muted/50 p-6;
+}
+
+/* Text colors */
+.text-default {
+  @apply text-foreground;
+}
+
+.text-muted {
+  @apply text-muted-foreground;
+}
+
+/* Background colors */
+.bg-default {
+  @apply bg-background;
+}
+
+.bg-card-default {
+  @apply bg-card;
+}
+
+.bg-muted-default {
+  @apply bg-muted;
+}
