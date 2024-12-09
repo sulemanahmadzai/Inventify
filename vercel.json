@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/backend/api/:path*" },
+    { "source": "/admin/:path*", "destination": "/adminPanel/dist/:path*" },
+    {
+      "source": "/customer/:path*",
+      "destination": "/customerPanel/dist/:path*"
+    },
+    {
+      "source": "/supplier/:path*",
+      "destination": "/supplierPanel/dist/:path*"
+    }
+  ]
+}
