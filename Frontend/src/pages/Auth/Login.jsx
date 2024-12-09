@@ -30,7 +30,9 @@ const Login = () => {
           },
         }
       );
-
+      console.log(response.data.token);
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
       setMessage("Login successful!");
     } catch (error) {
       console.error("Error during login:", error);
@@ -41,6 +43,7 @@ const Login = () => {
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
+    console.log(credentialResponse);
     try {
       const response = await axios.post(
         "http://localhost:3000/api/auth/google-login",
@@ -51,7 +54,9 @@ const Login = () => {
           },
         }
       );
-
+      console.log(response.data.token);
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
       setMessage("Google login successful!");
     } catch (error) {
       console.error("Error during Google login:", error);

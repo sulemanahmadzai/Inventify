@@ -1,17 +1,18 @@
 // models/User.js
 const mongoose = require("mongoose");
-
 const { Schema } = mongoose;
 
 const PaymentMethodSchema = new Schema({
-  type: { type: String, required: true }, // e.g., 'Credit Card', 'PayPal'
-  details: { type: Schema.Types.Mixed, required: true }, // Card details or other
+  type: { type: String, required: true },
+  details: { type: Schema.Types.Mixed, required: true },
 });
 
 const PersonalDetailsSchema = new Schema({
-  address: String,
   phoneNumber: String,
-  // Add other personal details fields as needed
+  country: { type: String },
+  city: { type: String },
+  state: { type: String },
+  postalCode: { type: String },
 });
 
 const UserSchema = new Schema(

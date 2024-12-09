@@ -57,6 +57,49 @@ exports.googleRegister = async (req, res) => {
       .json({ msg: "Google authentication failed", error: error.message });
   }
 };
+
+exports.googleLogin = async (req, res) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    console.log(ticket);
+    const { sub, email, name, picture } = ticket.getPayload(); // Extract data from payload
+
+    // Check if user exists in database
+    let user = await User.findOne({ googleId: sub });
+
+    if (!user) {
+      // If user doesn't exist, create a new one
+      user = new User({
+        googleId: sub,
+        email,
+        name,
+        picture,
+      });
+      await user.save();
+    }
+
+    // Generate a JWT for the user (You need to implement the `generateJwt` function)
+    const jwtToken = generateJwt({ id: user._id, email: user.email });
+
+    // Send the token to the frontend
+    res
+      .status(200)
+      .json({ token: jwtToken, message: "Google login successful!" });
+  } catch (error) {
+    console.error("Error during Google login:", error);
+    res.status(500).json({ message: "Google login failed. Please try again." });
+  }
+};
+
 // Register Route
 exports.register = async (req, res) => {
   const { name, email, passwordHash } = req.body;
@@ -154,12 +197,12 @@ exports.login = async (req, res) => {
 
 // Logout Route
 exports.logout = async (req, res) => {
-  // JWT tokens are stateless, so the server doesn't track them.
-  // Logout on the backend is simply a client-side operation where the token is deleted.
-
-  // This is usually handled on the client side by deleting the JWT token from storage (localStorage, cookies, etc.)
-  // For example, if using cookies, you could clear the token by setting an expired cookie:
-  res.clearCookie("token"); // Example, only works if token is stored in cookies
+  // Clear the cookie
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict"
+  });
 
   res.status(200).json({ msg: "Logged out successfully" });
 };

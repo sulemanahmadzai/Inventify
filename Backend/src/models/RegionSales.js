@@ -6,3 +6,4 @@ const RegionSalesSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("RegionSales", RegionSalesSchema);
+

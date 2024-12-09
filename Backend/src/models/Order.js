@@ -15,7 +15,7 @@ const OrderSchema = new Schema(
     orderItems: [OrderItemSchema],
     status: {
       type: String,
-      enum: ["pending", "shipped", "delivered"],
+      enum: ["pending", "processing", "shipped", "delivered"],
       default: "pending",
     },
     totalAmount: { type: Number, required: true },

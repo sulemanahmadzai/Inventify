@@ -1,5 +1,6 @@
 const User = require("../models/User");
 
+// Add User
 exports.addUser = async (req, res) => {
   try {
     const {
@@ -19,8 +20,11 @@ exports.addUser = async (req, res) => {
       role: role || "customer",
       accountStatus: accountStatus || "active",
       personalDetails: {
-        address: personalDetails?.address || "",
         phoneNumber: personalDetails?.phoneNumber || "",
+        country: personalDetails?.country || "",
+        city: personalDetails?.city || "",
+        state: personalDetails?.state || "",
+        postalCode: personalDetails?.postalCode || "",
       },
       paymentMethods: paymentMethods || [],
     });
@@ -35,15 +39,30 @@ exports.addUser = async (req, res) => {
   }
 };
 
+// Update User
 exports.updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const { personalDetails, ...updateData } = req.body;
+
+    if (personalDetails) {
+      updateData.personalDetails = {
+        phoneNumber: personalDetails.phoneNumber || "",
+        country: personalDetails.country || "",
+        city: personalDetails.city || "",
+        state: personalDetails.state || "",
+        postalCode: personalDetails.postalCode || "",
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
     });
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+
     res.status(200).json(user);
   } catch (error) {
     res
@@ -52,6 +71,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// Delete User
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -66,6 +86,7 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+// Get User by ID
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -80,6 +101,7 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// Get Users
 exports.getUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -123,6 +145,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+// Update User Role and Status
 exports.updateUserRoleAndStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -140,11 +163,9 @@ exports.updateUserRoleAndStatus = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Error updating user role and status",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Error updating user role and status",
+      details: error.message,
+    });
   }
 };

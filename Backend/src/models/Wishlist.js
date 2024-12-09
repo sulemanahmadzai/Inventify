@@ -1,19 +1,19 @@
 // models/Wishlist.js
 const mongoose = require("mongoose");
 
-const { Schema } = mongoose;
-
-const WishlistSchema = new Schema(
-  {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      unique: true,
-      required: true,
-    },
-    items: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+const WishlistSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    unique: true,
+    required: true,
   },
-  { timestamps: true }
-);
+  items: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+});
 
-module.exports = mongoose.model("Wishlist", WishlistSchema);
+// Create a unique index on userId
+WishlistSchema.index({ userId: 1 }, { unique: true });
+
+const Wishlist = mongoose.model("Wishlist", WishlistSchema);
+
+module.exports = Wishlist;

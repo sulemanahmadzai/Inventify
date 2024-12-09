@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import {
   Card,
   CardContent,
@@ -8,9 +7,55 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { List, ListItem, ListIcon } from "../../components/list"; // Ensure this is your own List component or customize accordingly
-import { ScrollArea } from "@/components/ui/scroll-area"; // Optional for better scrolling
-import { ShoppingCart, User, AlertTriangle } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import {
+  ShoppingCart,
+  User,
+  AlertTriangle,
+  Package,
+  UserPlus,
+  AlertCircle,
+  ChevronRight,
+} from "lucide-react";
+
+const statusColors = {
+  pending: "bg-yellow-100 text-yellow-800",
+  completed: "bg-green-100 text-green-800",
+  processing: "bg-blue-100 text-blue-800",
+  cancelled: "bg-red-100 text-red-800",
+};
+
+const ActivityCard = ({ title, description, icon: Icon, children }) => (
+  <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+    <CardHeader className="flex items-center space-x-3 p-4 bg-gray-50">
+      <Icon className="w-6 h-6 text-gray-600" />
+      <div>
+        <CardTitle className="text-lg font-semibold text-gray-800">
+          {title}
+        </CardTitle>
+        <CardDescription className="text-sm text-gray-500">
+          {description}
+        </CardDescription>
+      </div>
+    </CardHeader>
+    <CardContent className="p-4">
+      <ScrollArea className="h-64">{children}</ScrollArea>
+    </CardContent>
+  </Card>
+);
+
+const TimelineItem = ({ icon: Icon, children, className }) => (
+  <div className="flex items-center space-x-4 py-2">
+    <div
+      className={`flex items-center justify-center w-10 h-10 rounded-full ${className}`}
+    >
+      <Icon className="w-5 h-5" />
+    </div>
+    <div className="flex-1">{children}</div>
+    <ChevronRight className="w-5 h-5 text-gray-400" />
+  </div>
+);
 
 export function RecentActivity() {
   const [activityData, setActivityData] = useState({
@@ -19,12 +64,11 @@ export function RecentActivity() {
     lowStockAlerts: [],
   });
 
-  // Fetch recent activity from the API
   useEffect(() => {
     const fetchActivity = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/overview/recent-activity"
+          "http://localhost:3000/api/dashboard/recent-activity"
         );
         setActivityData(response.data.data);
       } catch (error) {
@@ -36,77 +80,103 @@ export function RecentActivity() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mt-8">
+    <div className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-3">
       {/* Recent Orders */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
-          <CardDescription>Latest 5 orders placed by users</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-52">
-            {" "}
-            {/* Allows scrolling if content overflows */}
-            <List>
-              {activityData.recentOrders.map((order) => (
-                <ListItem key={order._id}>
-                  <ListIcon as={ShoppingCart} className="text-primary" />
-                  <span>
-                    Order #{order._id} -{" "}
-                    <strong>{order.userId?.name || "Unknown User"}</strong> (
-                    {order.status})
-                  </span>
-                </ListItem>
-              ))}
-            </List>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+      <ActivityCard
+        title="Recent Orders"
+        description="Latest orders placed by users"
+        icon={Package}
+      >
+        <div className="space-y-2">
+          {activityData.recentOrders.length > 0 ? (
+            activityData.recentOrders.map((order) => (
+              <TimelineItem
+                key={order._id}
+                icon={ShoppingCart}
+                className="bg-blue-100 text-blue-600"
+              >
+                <div>
+                  <p className="text-sm font-medium">
+                    Order #{order._id.slice(-6)}
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <p className="text-sm text-gray-600">
+                      {order.userId?.name || "Unknown User"}
+                    </p>
+                    <Badge
+                      className={`${
+                        statusColors[order.status.toLowerCase()]
+                      } px-2 py-1 rounded-full text-xs`}
+                    >
+                      {order.status}
+                    </Badge>
+                  </div>
+                </div>
+              </TimelineItem>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">No recent orders available.</p>
+          )}
+        </div>
+      </ActivityCard>
 
       {/* New Users */}
-      <Card>
-        <CardHeader>
-          <CardTitle>New Users</CardTitle>
-          <CardDescription>Recently registered users</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-52">
-            <List>
-              {activityData.newUsers.map((user) => (
-                <ListItem key={user._id}>
-                  <ListIcon as={User} className="text-primary" />
-                  <span>
-                    {user.name} (<em>{user.email}</em>)
-                  </span>
-                </ListItem>
-              ))}
-            </List>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+      <ActivityCard
+        title="New Users"
+        description="Recently registered users"
+        icon={UserPlus}
+      >
+        <div className="space-y-2">
+          {activityData.newUsers.length > 0 ? (
+            activityData.newUsers.map((user) => (
+              <TimelineItem
+                key={user._id}
+                icon={User}
+                className="bg-green-100 text-green-600"
+              >
+                <div>
+                  <p className="text-sm font-medium">{user.name}</p>
+                  <p className="text-sm text-gray-600">{user.email}</p>
+                </div>
+              </TimelineItem>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">No new users registered.</p>
+          )}
+        </div>
+      </ActivityCard>
 
       {/* Low Stock Alerts */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Low Stock Alerts</CardTitle>
-          <CardDescription>Items with critical stock levels</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-52">
-            <List>
-              {activityData.lowStockAlerts.map((item) => (
-                <ListItem key={item._id}>
-                  <ListIcon as={AlertTriangle} className="text-destructive" />
-                  <span>
-                    <strong>{item.productId?.name || "Unknown Product"}</strong>{" "}
-                    - {item.quantity} remaining
-                  </span>
-                </ListItem>
-              ))}
-            </List>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+      <ActivityCard
+        title="Low Stock Alerts"
+        description="Items with critical stock levels"
+        icon={AlertCircle}
+      >
+        <div className="space-y-2">
+          {activityData.lowStockAlerts.length > 0 ? (
+            activityData.lowStockAlerts.map((item) => (
+              <TimelineItem
+                key={item._id}
+                icon={AlertTriangle}
+                className="bg-red-100 text-red-600"
+              >
+                <div>
+                  <p className="text-sm font-medium">
+                    {item.productId?.name || "Unknown Product"}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {item.quantity} units remaining
+                  </p>
+                </div>
+              </TimelineItem>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">
+              All stock levels are sufficient.
+            </p>
+          )}
+        </div>
+      </ActivityCard>
     </div>
   );
 }

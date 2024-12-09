@@ -58,7 +58,6 @@ const UserDetail = () => {
     const roleClasses = {
       admin: "bg-purple-100 text-purple-800",
       manager: "bg-blue-100 text-blue-800",
-      supplier: "bg-indigo-100 text-indigo-800",
       customer: "bg-gray-100 text-gray-800",
     };
 
@@ -139,16 +138,6 @@ const UserDetail = () => {
               <StatusBadge status={user.accountStatus} />
             </div>
 
-            <div className="space-y-2 md:col-span-2">
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-muted-foreground">Address</Label>
-              </div>
-              <div className="font-medium">
-                {user.personalDetails?.address || "N/A"}
-              </div>
-            </div>
-
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
@@ -156,6 +145,20 @@ const UserDetail = () => {
               </div>
               <div className="font-medium">
                 {user.personalDetails?.phoneNumber || "N/A"}
+              </div>
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <Label className="text-muted-foreground">Address</Label>
+              </div>
+              <div className="font-medium">
+                {`${user.personalDetails?.country || "N/A"}, ${
+                  user.personalDetails?.city || "N/A"
+                }, ${user.personalDetails?.state || "N/A"}, ${
+                  user.personalDetails?.postalCode || "N/A"
+                }`}
               </div>
             </div>
           </div>
@@ -186,7 +189,10 @@ const UserDetail = () => {
           </div>
 
           <div className="flex justify-end space-x-4 mt-6">
-            <Button onClick={() => navigate("/users")} variant="outline">
+            <Button
+              onClick={() => navigate("/user-management")}
+              variant="outline"
+            >
               Back to Users
             </Button>
             <Button onClick={() => navigate(`/users/${user._id}/edit`)}>

@@ -196,12 +196,10 @@
     animation: bounce 2s infinite;
   }
 }
-
 :root {
-  --chart-available: 240 2% 26%;
-  --chart-low-stock: 240 1% 58%;
-
-  --chart-out-of-stock: 359 2% 90%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
 }
 
 /* Custom styles for enhanced UI */

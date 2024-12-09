@@ -29,7 +29,11 @@ const Register = () => {
           },
         }
       );
+      console.log(response);
+      console.log(response.data.token);
+      localStorage.setItem("token", response.data.token);
 
+      navigate("/dashboard");
       setMessage("Registration successful!");
     } catch (error) {
       console.error("Error during registration:", error);
@@ -51,6 +55,10 @@ const Register = () => {
         }
       );
 
+      console.log(response);
+      localStorage.setItem("token", response.data.token);
+
+      navigate("/dashboard");
       setMessage("Google registration successful!");
     } catch (error) {
       console.error("Error during Google registration:", error);

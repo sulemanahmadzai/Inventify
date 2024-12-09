@@ -33,10 +33,13 @@ import { Separator } from "@/components/ui/separator";
 const userFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  role: z.enum(["customer", "manager", "supplier", "admin"]),
+  role: z.enum(["customer", "manager", "admin"]),
   accountStatus: z.enum(["active", "deactivated"]),
-  address: z.string().min(1, { message: "Address is required" }),
   phoneNumber: z.string().min(1, { message: "Phone number is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  state: z.string().min(1, { message: "State is required" }),
+  postalCode: z.string().min(1, { message: "Postal code is required" }),
 });
 
 const AddUser = () => {
@@ -48,8 +51,11 @@ const AddUser = () => {
       email: "",
       role: "customer",
       accountStatus: "active",
-      address: "",
       phoneNumber: "",
+      country: "",
+      city: "",
+      state: "",
+      postalCode: "",
     },
   });
 
@@ -60,7 +66,7 @@ const AddUser = () => {
         title: "Success",
         description: "User created successfully!",
       });
-      navigate("/users");
+      navigate("/user-management");
     } catch (error) {
       console.error("Error creating user:", error);
       toast({
@@ -145,7 +151,6 @@ const AddUser = () => {
                       <SelectContent>
                         <SelectItem value="customer">Customer</SelectItem>
                         <SelectItem value="manager">Manager</SelectItem>
-                        <SelectItem value="supplier">Supplier</SelectItem>
                         <SelectItem value="admin">Admin</SelectItem>
                       </SelectContent>
                     </Select>
@@ -182,26 +187,6 @@ const AddUser = () => {
               />
               <FormField
                 control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="123 Main St, City, Country"
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Enter the user's full address.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
@@ -216,11 +201,69 @@ const AddUser = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Input placeholder="USA" {...field} />
+                    </FormControl>
+                    <FormDescription>Enter the user's country.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input placeholder="New York" {...field} />
+                    </FormControl>
+                    <FormDescription>Enter the user's city.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>State</FormLabel>
+                    <FormControl>
+                      <Input placeholder="NY" {...field} />
+                    </FormControl>
+                    <FormDescription>Enter the user's state.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="postalCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="10001" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Enter the user's postal code.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="flex justify-end space-x-4">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate("/users")}
+                  onClick={() => navigate("/user-management")}
                 >
                   Cancel
                 </Button>

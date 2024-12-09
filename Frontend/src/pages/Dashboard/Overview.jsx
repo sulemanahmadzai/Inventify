@@ -28,25 +28,31 @@ import {
 export function Overview() {
   const [period, setPeriod] = useState("daily"); // Selected period
   const [chartData, setChartData] = useState([]);
+  const [isDataAvailable, setIsDataAvailable] = useState(true); // To track if there is data
 
   const fetchData = async (selectedPeriod) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/overview/top-products?period=${selectedPeriod}`
+        `http://localhost:3000/api/dashboard/top-products?period=${selectedPeriod}`
       );
 
-      // Process the data to get top 5 most sold products
       const processedData = response.data.data
         .map((product) => ({
           name: product.productName,
           total: product.totalSold,
         }))
         .sort((a, b) => b.total - a.total) // Sort by totalSold in descending order
-        .slice(0, 7); // Take top 5 products
+        .slice(0, 7); // Take top 7 products
 
-      setChartData(processedData);
+      if (processedData.length === 0) {
+        setIsDataAvailable(false);
+      } else {
+        setIsDataAvailable(true);
+        setChartData(processedData);
+      }
     } catch (error) {
       console.error("Error fetching product performance data:", error);
+      setIsDataAvailable(false);
     }
   };
 
@@ -55,10 +61,18 @@ export function Overview() {
   }, [period]);
 
   return (
-    <Card>
-      {/* Dropdown Section */}
-      <CardHeader className="items-center pb-0">
-        <div className="flex justify-end w-auto mb-4 ml-0 self-end">
+    <Card className="shadow-lg rounded-lg p-4">
+      {/* Title and Dropdown Section */}
+      <CardHeader className="flex flex-col items-start md:flex-row md:justify-between pb-4">
+        <div>
+          <CardTitle className="text-xl font-semibold">
+            Top Products Overview
+          </CardTitle>
+          <CardDescription>
+            Analyze the performance of your top products by period.
+          </CardDescription>
+        </div>
+        <div className="mt-4 md:mt-0">
           <Select onValueChange={(value) => setPeriod(value)} value={period}>
             <SelectTrigger className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
               <SelectValue placeholder="Select period" />
@@ -76,42 +90,50 @@ export function Overview() {
       </CardHeader>
 
       {/* Chart Section */}
-      <CardContent className="flex-1 pb-0">
-        <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px] ml-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 20, bottom: 50 }}>
-              <XAxis
-                dataKey="name"
-                stroke="#888888"
-                fontSize={10}
-                tickLine={false}
-                axisLine={false}
-                interval={0} // Ensures all labels are shown
-                angle={-45} // Rotates the labels for better fit
-                textAnchor="end" // Aligns the rotated labels
-              />
-              <YAxis
-                stroke="#888888"
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => `${value}`}
-              />
-              {/* Add Tooltip for interactivity */}
-              <Tooltip
-                contentStyle={{
-                  borderRadius: "8px",
-                }}
-                cursor={{ fill: "rgba(200, 200, 200, 0.2)" }}
-              />
-              <Bar
-                dataKey="total"
-                fill="currentColor"
-                radius={[4, 4, 0, 0]}
-                className="fill-primary"
-              />
-            </BarChart>
-          </ResponsiveContainer>
+      <CardContent>
+        <div className="flex flex-col items-center">
+          <h3 className="text-lg font-medium mb-4">Top 7 Most Sold Products</h3>
+          {isDataAvailable ? (
+            <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 20, bottom: 50 }}>
+                  <XAxis
+                    dataKey="name"
+                    stroke="hsl(var(--muted-foreground))"
+                    fontSize={10}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={0} // Ensures all labels are shown
+                    angle={-45} // Rotates the labels for better fit
+                    textAnchor="end" // Aligns the rotated labels
+                  />
+                  <YAxis
+                    stroke="hsl(var(--muted-foreground))"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "8px",
+                      color: "hsl(var(--chart-1))",
+                    }}
+                    cursor={{ fill: "rgba(200, 200, 200, 0.2)" }}
+                  />
+                  <Bar
+                    dataKey="total"
+                    fill="hsl(var(--chart-1))"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center w-full h-[300px] text-muted-foreground text-center">
+              <p>No sales data available for the selected period.</p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

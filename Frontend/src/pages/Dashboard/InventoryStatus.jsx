@@ -19,27 +19,32 @@ import {
 export function InventoryStatus() {
   const [inventoryData, setInventoryData] = useState([]);
 
-  // ShadCN color variables
-  const COLORS = [
-    "hsl(var(--chart-available))", // Available
-    "hsl(var(--chart-low-stock))", // Low Stock
-    "hsl(var(--chart-out-of-stock))", // Out of Stock
-  ];
-
   // Fetch inventory status from the backend
   useEffect(() => {
     const fetchInventoryStatus = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/overview/inventory-status"
+          "http://localhost:3000/api/dashboard/inventory-status"
         );
         const { data } = await response.json();
 
-        // Format the data for Recharts
+        // Format the data with color fills
         setInventoryData([
-          { name: "Available", value: data.available },
-          { name: "Low Stock", value: data.lowStock },
-          { name: "Out of Stock", value: data.outOfStock },
+          {
+            name: "Available",
+            value: data.available,
+            fill: "hsl(var(--chart-1))",
+          },
+          {
+            name: "Low Stock",
+            value: data.lowStock,
+            fill: "hsl(var(--chart-2))",
+          },
+          {
+            name: "Out of Stock",
+            value: data.outOfStock,
+            fill: "hsl(var(--chart-3))",
+          },
         ]);
       } catch (error) {
         console.error("Error fetching inventory status:", error);
@@ -67,14 +72,10 @@ export function InventoryStatus() {
                 cy="50%"
                 innerRadius={60}
                 outerRadius={100}
-                fill="#8884d8"
                 paddingAngle={5}
               >
                 {inventoryData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
               <Tooltip />

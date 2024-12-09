@@ -9,14 +9,19 @@ const ProductSchema = new Schema(
     description: String,
     price: { type: Number, required: true },
     categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+
     tags: [String],
     attributes: { type: Schema.Types.Mixed }, // Key-value pairs
     images: [String], // URLs or paths to images
+
     status: {
       type: String,
-      enum: ["available", "out_of_stock"],
+      enum: ["available", "out_of_stock", "discontinued"],
       default: "available",
+    
     },
+
+
   },
   { timestamps: true }
 );

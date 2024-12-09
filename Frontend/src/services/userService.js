@@ -22,7 +22,16 @@ export const userService = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify({
+        ...userData,
+        personalDetails: {
+          phoneNumber: userData.phoneNumber,
+          country: userData.country,
+          city: userData.city,
+          state: userData.state,
+          postalCode: userData.postalCode,
+        },
+      }),
     });
     if (!response.ok) {
       throw new Error("Failed to create user");
@@ -45,7 +54,17 @@ export const userService = {
     if (!response.ok) {
       throw new Error("Failed to fetch user details");
     }
-    return response.json();
+    const data = await response.json();
+
+    // Flatten the `personalDetails` structure for the frontend
+    return {
+      ...data,
+      phoneNumber: data.personalDetails?.phoneNumber || "",
+      country: data.personalDetails?.country || "",
+      city: data.personalDetails?.city || "",
+      state: data.personalDetails?.state || "",
+      postalCode: data.personalDetails?.postalCode || "",
+    };
   },
 
   updateUser: async (userId, userData) => {
@@ -54,7 +73,16 @@ export const userService = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify({
+        ...userData,
+        personalDetails: {
+          phoneNumber: userData.phoneNumber,
+          country: userData.country,
+          city: userData.city,
+          state: userData.state,
+          postalCode: userData.postalCode,
+        },
+      }),
     });
     if (!response.ok) {
       throw new Error("Failed to update user");

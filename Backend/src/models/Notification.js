@@ -9,7 +9,13 @@ const NotificationSchema = new Schema(
     message: { type: String, required: true },
     type: {
       type: String,
-      enum: ["discount", "stock_availability", "order_status", "general"],
+      enum: [
+        "discount",
+        "stock_availability",
+        "order_status",
+        "general",
+    
+      ],
       default: "general",
     },
     isRead: { type: Boolean, default: false },
